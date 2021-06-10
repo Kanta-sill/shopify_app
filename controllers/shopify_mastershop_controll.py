@@ -10,8 +10,6 @@ from werkzeug.utils import redirect
 from odoo import http
 from odoo.http import request
 
-base_url = 'https://odoo.website'
-
 
 class MasterShopShopify(http.Controller):
     @http.route('/shopify/auth/mts', auth='public', website=False)
@@ -20,6 +18,7 @@ class MasterShopShopify(http.Controller):
             app_current = request.env['shopify.app'].sudo().search([('app_name', '=', 'mts')], limit=1)
             API_KEY = app_current.api_key
             API_SECRET = app_current.secret_key
+	    base_url = app_current.base_url
             api_version = app_current.api_version
             shop_url = kwargs['shop']
 
@@ -37,6 +36,7 @@ class MasterShopShopify(http.Controller):
     @http.route('/shopify/finalize/mts', auth='public', website=False)
     def shopify_shop_final(self, **kwargs):
         app_current = request.env['shopify.app'].sudo().search([], limit=1)
+	base_url = app_current.base_url
         api_version = app_current.api_version
 
         params = request.params
