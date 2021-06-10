@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="discount_choose_product_view_form" model="ir.ui.view">
+        <field name="name">shopify.discount.choose.product.wizard</field>
+        <field name="model">shopify.discount.choose.product</field>
+        <field name="arch" type="xml">
+            <form string="Choose Product">
+                <group>
+                    <field name="discount_id"/>
+                </group>
+                <notebook>
+                    <page string="Product">
+                        <field name="pro_ids">
+                            <tree string="Product" editable="bottom" create="0" delete="0">
+                                <field name="check_product"/>
+                                <field name="product_id" readonly="1"/>
+                                <field name="price" readonly="1"/>
+                            </tree>
+                        </field>
+                    </page>
+                </notebook>
+                <footer>
+                    <button string="Choose" class="btn-primary" type="object" name="choose_discount_product"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+</odoo>
