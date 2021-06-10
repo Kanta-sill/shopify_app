@@ -24,6 +24,7 @@
                         <group>
                             <field name="api_key"/>
                             <field name="secret_key"/>
+                            <field name="base_url"/>
                         </group>
                         <group>
                             <field name="api_version"/>
