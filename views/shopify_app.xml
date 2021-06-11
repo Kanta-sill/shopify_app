@@ -24,6 +24,7 @@
                         <group>
                             <field name="api_key"/>
                             <field name="secret_key"/>
+                            <field name="base_url"/>
                         </group>
                         <group>
                             <field name="api_version"/>
@@ -48,6 +49,6 @@
     </record>
 
     <menuitem id="shop_app_root" name="Shop App" sequence="7"/>
-    <menuitem id="shop_app" parent="shop_app_root" action="shop_app_action"/>
+    <menuitem id="shop_app" name="App" parent="shop_app_root" action="shop_app_action"/>
 
 </odoo>

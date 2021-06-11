@@ -44,10 +44,10 @@ window.notifywhatsappthankyoupage = function () {
                     $("<table style=\"margin-left: 50%;\">\n" +
                         "            <tr>\n" +
                         "                <td>\n" +
-                        "                \t<span class=\"cart-subtotal__title1\">{{ 'cart.general.subtotal' | t }}</span>\n" +
+                        "                \t<span class=\"cart-subtotal__title1\">Subtotal</span>\n" +
                         "                </td>\n" +
                         "                <td>\n" +
-                        "                \t<span class=\"cart-subtotal_price1\" data-cart-subtotal>{{ cart.total_price | money_with_currency }}</span>\n" +
+                        "                \t<span class=\"cart-subtotal_price1\" data-cart-subtotal></span>\n" +
                         "                </td>\n" +
                         "              </tr>\n" +
                         "              <tr class=\"cart-discount__total1\">\n" +

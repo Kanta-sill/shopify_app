@@ -46,6 +46,6 @@
         </field>
     </record>
 
-    <menuitem id="shopify_product_load" parent="shop_app_root" action="shopify_product_load_action"/>
+    <menuitem id="shopify_product_load" name="Shop Product" parent="shop_app_root" action="shopify_product_load_action"/>
 
 </odoo>
