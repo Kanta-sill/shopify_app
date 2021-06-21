@@ -37,7 +37,7 @@ class MasterShopReport(http.Controller):
                     item_list.remove(item)
                 item_info.append({item_name: item, 'Quantity': item_quantity})
             item_info.sort(reverse=True, key=sort)
-            return item_info
+            return item_info[:10]
 
         current = datetime.datetime.now()
         month_current = current.strftime("%m/%Y")
