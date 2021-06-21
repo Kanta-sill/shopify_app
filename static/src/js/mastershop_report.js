@@ -64,7 +64,6 @@ odoo.define('shopify_app.mastershop_report_analytic_js', function (require) {
                     '        });\n' +
                     '\t}\n' +
                     '</script>'
-
                 $('#mastershop_report_dashboard_iframe').contents().find('#mastershop_analytic_graph_bar').after(analyticGraphBar)
             }
         })

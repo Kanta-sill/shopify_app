@@ -36,7 +36,6 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="shop_app_root" name="Shop App" sequence="7"/>
-    <menuitem id="shop_analytic" name="Analytic" parent="shop_app_root" action="shop_analytic_action"/>
+    <menuitem id="shop_analytic" name="Analytic" parent="shop_app_root" action="shop_analytic_action" sequence="10"/>
 
 </odoo>

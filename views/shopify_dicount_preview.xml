@@ -50,6 +50,6 @@
         </field>
     </record>
 
-    <menuitem id="shop_discount_preview" name="Preview" parent="shop_app_root" action="shop_discount_preview_action"/>
+    <menuitem id="shop_discount_preview" name="Preview" parent="shop_app_root" action="shop_discount_preview_action" sequence="12"/>
 
 </odoo>
