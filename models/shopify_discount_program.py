@@ -9,8 +9,8 @@ class ShopifyDiscountProgram(models.Model):
     _description = "Discount Program"
 
     def get_discount_shop(self):
-        user_current = self.env['res.users'].search([('id', '=', self._uid)])
-        shop_current = self.env['shopify.shop'].search([('base_url', '=', user_current.login)])
+        user_current = self.env['res.users'].sudo().search([('id', '=', self._uid)])
+        shop_current = self.env['shopify.shop'].sudo().search([('base_url', '=', user_current.login)])
         if shop_current:
             return shop_current.id
         else:
@@ -74,7 +74,7 @@ class ShopifyDiscountProgram(models.Model):
             self.get_authenticate_shopify()
             customers = shopify.Customer.search()
             for customer in customers:
-                check_customer = self.env['shopify.discount.program.customer'].search(
+                check_customer = self.env['shopify.discount.program.customer'].sudo().search(
                     [('discount_id', '=', self.id), ('cus_id', '=', customer.id)])
                 name = customer.first_name + ' ' + customer.last_name
                 cus_vals = {

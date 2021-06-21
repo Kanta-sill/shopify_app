@@ -22,15 +22,18 @@
                         <field name="shop"/>
                     </group>
                     <div class="row" style="margin-top: 42px">
-                        <b style="width: 100px; margin-left: 30px; margin-top: 7px">Discount Color:</b><field name="discount_color" widget="color" style="width: 70px; margin-left: 26px"/>
+                        <b style="width: 100px; margin-left: 30px; margin-top: 7px">Discount Color:</b>
+                        <field name="discount_color" widget="color" style="width: 70px; margin-left: 26px"/>
                         <field name="discount_sample" style="width: 30%; margin-top: 7px; margin-left: 20%" readonly="1"/>
                     </div>
                     <div class="row" style="margin-top: 12px">
-                        <b style="width: 100px; margin-left: 30px; margin-top: 7px">Amount Color:</b><field name="amount_color" widget="color" style="width: 70px; margin-left: 26px"/>
+                        <b style="width: 100px; margin-left: 30px; margin-top: 7px">Amount Color:</b>
+                        <field name="amount_color" widget="color" style="width: 70px; margin-left: 26px"/>
                         <field name="amount_sample" style="width: 30%; margin-top: 7px; margin-left: 20%" readonly="1"/>
                     </div>
                     <div class="row" style="margin-top: 12px">
-                        <b style="width: 100px; margin-left: 30px; margin-top: 7px">Voucho Color:</b><field name="voucho_color" widget="color" style="width: 70px; margin-left: 26px"/>
+                        <b style="width: 100px; margin-left: 30px; margin-top: 7px">Voucho Color:</b>
+                        <field name="voucho_color" widget="color" style="width: 70px; margin-left: 26px"/>
                         <field name="voucho_sample" style="width: 30%; margin-top: 7px; margin-left: 20%" readonly="1"/>
                     </div>
                 </sheet>

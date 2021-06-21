@@ -11,12 +11,12 @@ class ShopifyDiscountChooseProduct(models.TransientModel):
                               string='Discount Product ID')
 
     def choose_discount_product(self):
-        discount_product = self.env['shopify.discount.program.product'].search(
+        discount_product = self.env['shopify.discount.program.product'].sudo().search(
             [('discount_id', '=', self.discount_id.id)])
         pro_id_list = []
         for pro in discount_product:
             pro_id_list.append(pro.pro_id)
-        pro_list = self.env['shopify.discount.choose.product.get.product'].search(
+        pro_list = self.env['shopify.discount.choose.product.get.product'].sudo().search(
             [('discount_id', '=', self.id), ('check_product', '=', True)])
 
         for pro in pro_list:
@@ -26,7 +26,7 @@ class ShopifyDiscountChooseProduct(models.TransientModel):
                     'pro_id': pro.pro_id,
                     'name': pro.name
                 }
-                self.env['shopify.discount.program.product'].create(pro_vals)
+                self.env['shopify.discount.program.product'].sudo().create(pro_vals)
         pass
 
 

@@ -7,7 +7,7 @@ class ShopifyDiscountPreview(models.Model):
     _description = "Preview"
     _rec_name = 'shop'
 
-    shop = fields.Many2one('shopify.shop', string='Shop ID')
+    shop = fields.Many2one('shopify.shop', string='Shop ID', readonly=True)
     discount_color = fields.Char(string='Discount Color', default='#000000', store=True)
     discount_sample = fields.Html(string='Discount sample', compute="_compute_discount_sample")
     amount_color = fields.Char(string='Amount Color', default='#000000', store=True)
