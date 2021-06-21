@@ -1,5 +1,4 @@
 import binascii
-import datetime
 import json
 import os
 from random import randint
@@ -129,7 +128,7 @@ class MasterShopShopify(http.Controller):
         request.env.cr.commit()
         uid = request.session.authenticate(db, shop_url, mat_khau.password)
 
-        BundleMenu = request.env.ref('shopify_app.discount_program').id
+        BundleMenu = request.env.ref('shopify_app.shop_app_root').id
         redirectUrl = base_url + '/web?#menu_id=' + str(BundleMenu)
         return werkzeug.utils.redirect(redirectUrl, 301)
 

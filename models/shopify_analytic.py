@@ -7,4 +7,3 @@ class ShopifyAnalytic(models.Model):
 
     shop_id = fields.Many2one('shopify.shop', string='Shop ID')
     name = fields.Char(string='Name')
-    discount_id = fields.Many2one('shopify.discount.program', domain="[('shop_id', '=', shop_id)]")
