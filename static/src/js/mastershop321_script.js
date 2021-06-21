@@ -44,7 +44,7 @@ notifywhatsappthankyoupage = function () {
     if (document.baseURI.startsWith('https://' + shop + '/cart')) {
         $.ajax({
             type: 'GET',
-            url: 'https://' + shop +'/cart.js',
+            url: 'https://' + shop + '/cart.js',
             dataType: 'json',
             data: JSON.stringify({jsonrpc: '2.0'}),
             contentType: 'application/json',
@@ -138,7 +138,7 @@ notifywhatsappthankyoupage = function () {
                 $(".cart__submit").click(function () {
                     $.ajax({
                         type: 'GET',
-                        url: 'https://' + shop +'/cart.js',
+                        url: 'https://' + shop + '/cart.js',
                         dataType: 'json',
                         data: JSON.stringify({jsonrpc: '2.0'}),
                         contentType: 'application/json',
@@ -147,16 +147,16 @@ notifywhatsappthankyoupage = function () {
                         },
                         complete: function (data) {
                             var data_parse = JSON.parse(data['responseText'])
-                                if (window.customerId == "") {
-                                    alert('You must login before checkout')
-                                    top.location.href = document.location.href ;
-                                } else {
-                                    data_parse['discount_program'] = productDetail['discounts']
-                                    data_parse['customer_id'] = window.customerId
-                                    data_parse['discount_value'] = productDetail['final_discount']
-                                    data_parse['total'] = productDetail['purchase']
-                                    UpdateCheckout(data_parse)
-                                }
+                            if (window.customerId == "") {
+                                alert('You must login before checkout')
+                                top.location.href = document.location.href;
+                            } else {
+                                data_parse['discount_program'] = productDetail['discounts']
+                                data_parse['customer_id'] = window.customerId
+                                data_parse['discount_value'] = productDetail['final_discount']
+                                data_parse['total'] = productDetail['purchase']
+                                UpdateCheckout(data_parse)
+                            }
                         }
                     })
                 });
