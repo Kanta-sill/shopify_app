@@ -69,7 +69,7 @@
         </field>
     </record>
 
-    <menuitem id="shopify_shop" name="Shop" parent="shop_app_root" action="shopify_shop_action" sequence="4" groups="shopify_app.group_shop_admin"/>
+    <menuitem id="shopify_shop" name="Shop" parent="shop_app_root" action="shopify_shop_action" sequence="4"/>
     <menuitem id="shopify_shop_app" name="Shop of App" parent="shop_app_root" action="shopify_shop_app_action" sequence="6"/>
 
 </odoo>

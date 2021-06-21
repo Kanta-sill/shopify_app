@@ -35,6 +35,13 @@
         <field name="groups" eval="[(4, ref('shopify_app.group_current_shop'))]"/>
     </record>
 
+    <record id="shopify_shop_analytic" model="ir.rule">
+        <field name="name">shopify.analytic</field>
+        <field name="model_id" ref="shopify_app.model_shopify_analytic"/>
+        <field name="domain_force">[('shop_id', '=', user.shop_id.id)]</field>
+        <field name="groups" eval="[(4, ref('shopify_app.group_current_shop'))]"/>
+    </record>
+
     <record id="shopify_discount_program_admin" model="ir.rule">
         <field name="name">shopify.discount.program.admin</field>
         <field name="model_id" ref="shopify_app.model_shopify_discount_program"/>
