@@ -26,7 +26,7 @@ notifywhatsappthankyoupage = function () {
     function UpdateCheckout(data) {
         $.ajax({
             type: 'POST',
-            url: 'https://odoo.website/shopify_data/update_checkout/' + shop,
+            url: base_url + '/shopify_data/update_checkout/' + shop,
             dataType: 'json',
             data: JSON.stringify({
                 'params': data,
@@ -67,7 +67,7 @@ notifywhatsappthankyoupage = function () {
     function VariantBought(data, customer_id) {
         $.ajax({
             type: 'POST',
-            url: 'https://odoo.website/shopify_data/fetch_variant/' + customer_id + '/' + shop,
+            url: base_url + '/shopify_data/fetch_variant/' + customer_id + '/' + shop,
             dataType: 'json',
             data: JSON.stringify({
                 'params': data,
