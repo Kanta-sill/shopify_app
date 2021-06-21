@@ -1,3 +1,5 @@
+const base_url = 'https://odoo.website'
+
 odoo.define('shopify_app.mastershop_report_analytic_js', function (require) {
     'use strict'
     var FormController = require('web.FormController');
@@ -9,7 +11,7 @@ odoo.define('shopify_app.mastershop_report_analytic_js', function (require) {
         var shop = data.shop_id.data['display_name']
         $.ajax({
             type: 'POST',
-            url: 'https://odoo.website/shopify_data/analytic_bar/' + shop,
+            url: base_url + '/shopify_data/analytic_bar/' + shop,
             dataType: 'json',
             data: JSON.stringify({jsonrpc: '2.0'}),
             contentType: 'application/json',
