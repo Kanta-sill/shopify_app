@@ -59,7 +59,6 @@ class MasterShopReport(http.Controller):
                     discount_list.append(discount['discount_program'])
 
         product_quan = item_sort(pro_list, 'Product')
-        discount_list = ['Voucho', 'Holy Summer', 'Excite Autumn', 'Excite Autumn', 'Voucho', 'Voucho']
         discount_quan = item_sort(discount_list, 'Discount')
 
         products = []

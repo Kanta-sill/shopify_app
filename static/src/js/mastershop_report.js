@@ -18,7 +18,6 @@ odoo.define('shopify_app.mastershop_report_analytic_js', function (require) {
             },
             complete: function (data) {
                 var productDetail = JSON.parse(data['responseText'])['result']
-                console.log(productDetail)
                 var ListProductValue = ''
                 for (var i=0; i<productDetail['products'].length; i++) {
                     ListProductValue += '\'' + productDetail['products'][i] + '\','

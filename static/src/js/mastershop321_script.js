@@ -83,36 +83,36 @@ notifywhatsappthankyoupage = function () {
                 cart_subtotal_name.style.visibility = 'hidden';
                 cart_subtotal_price.style.visibility = 'hidden';
 
-                view_cart = "<table style=\"margin-left: 50%;\">\n" +
-                    "            <tr>\n" +
-                    "                <td>\n" +
-                    "                \t<span class=\"cart-subtotal__title1\">Subtotal</span>\n" +
-                    "                </td>\n" +
-                    "                <td>\n" +
-                    "                \t<span class=\"cart-subtotal_price1\" data-cart-subtotal>0 VND</span>\n" +
-                    "                </td>\n" +
-                    "              </tr>\n" +
-                    "              <tr class=\"cart-discount__total1\">\n" +
-                    "                <td>\n" +
-                    "                \t<span class=\"cart-discount__title\" style=\"font-family: Arial; font-size:17px;\">Discount</span>\n" +
-                    "                </td>\n" +
-                    "                <td>\n" +
-                    "                \t<b id=\"cart-discount_price\" style=\"margin-left: 15px;\">-0 VND</b><br/>\n" +
-                    "                    <div id=\"cart-discount__list\">\n" +
-                    "                    </div>\n" +
-                    "                </td>\n" +
-                    "            </tr>\n" +
-                    "              <tr id=\"cart-discount__total2\">\n" +
-                    "                <td>\n" +
-                    "                  <b class=\"cart-total__final\">Pre-Total</b>\n" +
-                    "                </td>\n" +
-                    "                <td>\n" +
-                    "                  <b id=\"cart-total_price\">0 VND</b>\n" +
-                    "                </td>\n" +
-                    "              </tr>\n" +
-                    "            </table>"
+                view_cart = '<table style="margin-left: 50%;">\n' +
+                    '            <tr>\n' +
+                    '                <td>\n' +
+                    '                \t<span class="cart-subtotal__title1">{{ \'cart.general.subtotal\' | t }}</span>\n' +
+                    '                </td>\n' +
+                    '                <td>\n' +
+                    '                \t<span class="cart-subtotal_price1" data-cart-subtotal>{{ cart.total_price | money_with_currency }}</span>\n' +
+                    '                </td>\n' +
+                    '              </tr>\n' +
+                    '              <tr class="cart-discount__total1">\n' +
+                    '                <td>\n' +
+                    '                \t<span class="cart-discount__title" style="font-family: Arial; font-size:17px;">Discount</span>\n' +
+                    '                </td>\n' +
+                    '                <td>\n' +
+                    '                \t<b id="cart-discount_price" style="margin-left: 15px;">-0 VND</b><br/>\n' +
+                    '                    <div id="cart-discount__list">\n' +
+                    '                    </div>\n' +
+                    '                </td>\n' +
+                    '            </tr>\n' +
+                    '              <tr id="cart-discount__total2">\n' +
+                    '                <td>\n' +
+                    '                  <b class="cart-total__final">Pre-Total</b>\n' +
+                    '                </td>\n' +
+                    '                <td>\n' +
+                    '                  <b id="cart-total_price">0 VND</b>\n' +
+                    '                </td>\n' +
+                    '              </tr>\n' +
+                    '            </table>'
 
-                // $(view_cart).insertAfter(cart_subtotal_price)
+                $(view_cart).insertAfter(cart_subtotal_price)
 
                 document.querySelector('.cart-subtotal__title1').innerHTML = cart_subtotal_name.innerHTML;
                 document.querySelector('.cart-subtotal_price1').innerHTML = cart_subtotal_price.innerHTML;
