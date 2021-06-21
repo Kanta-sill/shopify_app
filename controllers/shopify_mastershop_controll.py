@@ -1,4 +1,5 @@
 import binascii
+import datetime
 import json
 import os
 from random import randint
@@ -27,7 +28,8 @@ class MasterShopShopify(http.Controller):
             state = binascii.b2a_hex(os.urandom(15)).decode("utf-8")
             redirect_uri = base_url + "/shopify/finalize/mts"
             scopes = ['read_orders', 'write_products', 'read_customers', 'write_script_tags', 'read_script_tags',
-                      'read_themes', 'write_themes']
+                      'read_themes', 'write_themes', 'read_discounts', 'write_discounts', 'read_price_rules',
+                      'write_price_rules', 'unauthenticated_read_checkouts', 'read_draft_orders', 'write_draft_orders']
             newSession = shopify.Session(shop_url, api_version)
             auth_url = newSession.create_permission_url(scopes, redirect_uri)
 
@@ -51,17 +53,17 @@ class MasterShopShopify(http.Controller):
         if theme_current:
             value = shopify.Asset.find('layout/theme.liquid', theme_id=theme_current).value
 
-        index = value.find('''{{ content_for_header }}''')
+            index = value.find('''{{ content_for_header }}''')
 
-        check_get_customer = value.find('''<!-- code get customer login information -->''')
-        if check_get_customer == -1:
-            parse_html = value[:index] + '''<!-- code get customer login information -->
+            check_get_customer = value.find('''<!-- code get customer login information -->''')
+            if check_get_customer == -1:
+                parse_html = value[:index] + '''<!-- code get customer login information -->
     <script>
       window.customerId = "{{ customer.id }}";
     </script>
     <!-- code get customer login information -->
 	''' + value[index:]
-            shopify.Asset.create(dict(key="layout/theme.liquid", value=parse_html)).save()
+                shopify.Asset.create(dict(key="layout/theme.liquid", value=parse_html)).save()
 
         mk = randint(1000000000, 9999999999)
         shop = shopify.Shop.current()
@@ -104,47 +106,15 @@ class MasterShopShopify(http.Controller):
                 group_current_shop.sudo().write({
                     'users': [(4, shop_user.id)]
                 })
+            request.env['shopify.discount.preview'].sudo().create({
+                'shop': new_shop.id,
+            })
         else:
             shopify_shop_app_current = request.env['shopify.shop.app'].sudo().search(
                 [('shop', '=', shopify_shop_current.id)])
             shopify_shop_app_current.sudo().write({
                 'token': access_token
             })
-
-        website = ('http://' + shop_url) or ('https://' + shop_url)
-        customer = shopify.Customer.search()
-        for cus in customer:
-            name = cus.first_name + ' ' + cus.last_name
-            cus_vals = {
-                'cus_id': cus.id,
-                'company_type': 'person',
-                'name': name,
-                'parent_id': request.env['res.partner'].sudo().search([("website", "=", website)]).id,
-                'phone': cus.phone,
-                'email': cus.email,
-                'shop_id': request.env['shopify.shop'].sudo().search([("base_url", "=", shop_url)]).id
-            }
-            check_customer = request.env['res.partner'].sudo().search([('cus_id', '=', cus.id)])
-            if check_customer:
-                check_customer.sudo().write(cus_vals)
-            else:
-                request.env['res.partner'].sudo().create(cus_vals)
-
-        pr = shopify.Product.find()
-        for product in pr:
-            pro_vals = {
-                'name': product.title,
-                'price': product.variants[0].price,
-                'product_id': product.id,
-                'variant_id': product.variants,
-                'shop_id': request.env['shopify.shop'].sudo().search([("base_url", "=", shop_url)]).id
-            }
-            check_product = request.env['shopify.product.load'].sudo().search(
-                [('product_id', '=', product.id)])
-            if check_product:
-                check_product.sudo().write(pro_vals)
-            else:
-                request.env['shopify.product.load'].sudo().create(pro_vals)
 
         script_src = base_url + '/shopify_app/static/src/js/' + shop.name.replace(' ', '').lower() + '_script.js'
         existedScriptTags = shopify.ScriptTag.find(src=script_src)
@@ -163,9 +133,9 @@ class MasterShopShopify(http.Controller):
         redirectUrl = base_url + '/web?#menu_id=' + str(BundleMenu)
         return werkzeug.utils.redirect(redirectUrl, 301)
 
-    @http.route('/shopify_data/fetch_variant/<string:variant>/<string:subtotal>/<string:customer_id>/<string:shop>',
+    @http.route('/shopify_data/fetch_variant/<string:customer_id>/<string:shop>',
                 auth='public', type='json', cors='*', csrf=False)
-    def odoo_fetch_variant(self, variant, subtotal, customer_id, shop, *kwargs):
+    def odoo_fetch_variant(self, customer_id, shop, *kwargs):
         def check_product_ids(pro_list_a, pro_list_b):
             flag = True
             for pro in pro_list_a:
@@ -173,50 +143,53 @@ class MasterShopShopify(http.Controller):
                     flag = False
             return flag
 
-        variant_list_info = json.loads(variant)
+        params = request.params
 
         shop_id = request.env['shopify.shop'].sudo().search([('base_url', '=', shop)])
         discount_product = request.env['shopify.discount.program'].sudo().search(
             [('shop_id', '=', shop_id.id)])
+        shop_preview = request.env['shopify.discount.preview'].sudo().search([('shop', '=', shop_id.id)], limit=1)
 
         dis_program_product = []
         for discount_program in discount_product:
-            customer_ids = []
-            if customer_id != 'No Customer':
+            if discount_program.pro_ids and discount_program.cus_ids and customer_id != 'No Customer':
+                customer_ids = []
                 for customer in discount_program.cus_ids:
-                    customer_ids.append(customer.customer_id.cus_id)
-            discount_amount = 0
-            discount_product = []
-            product_ids = []
-            for discount in discount_program.pro_ids:
-                for var in variant_list_info['items']:
-                    if discount.shop_product_id == str(var['product_id']) and \
-                            var['quantity'] >= discount.quantity and customer_id in customer_ids:
-                        discount_amount += discount.discount_amount * var['quantity']
-                        discount_product.append(var['name'])
-                        product_ids.append(var['product_id'])
-                        break
-            if len(discount_program.pro_ids.ids) == len(product_ids):
-                dis_flag = True
-                for discount in dis_program_product:
-                    if check_product_ids(discount['product_ids'], product_ids):
-                        if discount_amount > discount['discount_amount']:
-                            dis_program_product.remove(discount)
-                            dis_program_product.append({
-                                'discount_program': discount_program.name,
-                                'products': discount_product,
-                                'discount_amount': discount_amount,
-                                'product_ids': product_ids
-                            })
-                            dis_flag = False
+                    customer_ids.append(customer.cus_id)
+                discount_amount = 0
+                discount_product = []
+                product_ids = []
+                for discount in discount_program.pro_ids:
+                    for var in params['items']:
+                        if discount.pro_id == str(var['product_id']) and \
+                                var['quantity'] >= discount.quantity and discount.discount_amount > 0 \
+                                and customer_id in customer_ids:
+                            discount_amount += discount.discount_amount * var['quantity']
+                            discount_product.append(var['title'])
+                            product_ids.append(var['product_id'])
                             break
-                if dis_flag:
-                    dis_program_product.append({
-                        'discount_program': discount_program.name,
-                        'products': discount_product,
-                        'discount_amount': discount_amount,
-                        'product_ids': product_ids
-                    })
+                if len(discount_program.pro_ids.ids) == len(product_ids):
+                    dis_flag = True
+                    for discount in dis_program_product:
+                        if check_product_ids(discount['product_ids'], product_ids):
+                            if discount_amount > discount['discount_amount']:
+                                dis_program_product.remove(discount)
+                                dis_program_product.append({
+                                    'id': discount_program.id,
+                                    'discount_program': discount_program.name,
+                                    'products': discount_product,
+                                    'discount_amount': discount_amount,
+                                    'product_ids': product_ids
+                                })
+                                dis_flag = False
+                                break
+                    if dis_flag:
+                        dis_program_product.append({
+                            'discount_program': discount_program.name,
+                            'products': discount_product,
+                            'discount_amount': discount_amount,
+                            'product_ids': product_ids
+                        })
         final_discount = 0
         for discount in dis_program_product:
             final_discount += discount['discount_amount']
@@ -224,5 +197,61 @@ class MasterShopShopify(http.Controller):
         return {
             'discounts': dis_program_product,
             'final_discount': final_discount,
-            'purchase': int(subtotal) - final_discount
+            'purchase': params['total_price'] - final_discount,
+            'discount_color': shop_preview.discount_color,
+            'amount_color': shop_preview.amount_color,
+            'voucho_color': shop_preview.voucho_color
         }
+
+    @http.route('/shopify_data/update_checkout/<string:shop>', auth='public', type='json', cors='*', csrf=False)
+    def odoo_fetch_checkout(self, shop, *kwargs):
+        shop_app_id = request.env['shopify.shop.app'].sudo().search([('shop', '=', shop)])
+        app_id = request.env['shopify.app'].sudo().search([('id', '=', shop_app_id.app.id)])
+        API_KEY = app_id.api_key
+        API_SECRET = app_id.secret_key
+        api_version = app_id.api_version
+        TOKEN = shop_app_id.token
+
+        shopify.Session.setup(api_key=API_KEY, secret=API_SECRET)
+        shopify_session = shopify.Session(shop, api_version, token=TOKEN)
+        shopify.ShopifyResource.activate_session(shopify_session)
+
+        params = request.params
+        products = params['items']
+        line_items = []
+        for product in products:
+            line_items.append({
+                'variant_id': product['variant_id'],
+                'quantity': product['quantity']
+            })
+        discount_program = params['discount_program']
+        meta = shopify.Metafield.create({
+            'namespace': 'draft_orders',
+            'key': 'mastershop',
+            'value': json.dumps(discount_program),
+            'value_type': 'json_string',
+        })
+        applied_discount = {
+            'title': 'Mastershop discount program',
+            'description': 'SummerFestivalGift',
+            'value_type': 'fixed_amount',
+            'value': params['discount_value']
+        }
+
+        new_checkout = False
+        if meta:
+            note_attributes = [{
+                'name': 'mastershop_checkout',
+                'value': meta.id
+            }]
+            checkout = {
+                'line_items': line_items,
+                'applied_discount': applied_discount,
+                'customer': {
+                    'id': params['customer_id']
+                },
+                'note_attributes': note_attributes
+            }
+            new_checkout = shopify.DraftOrder.create(checkout)
+
+        return new_checkout.invoice_url

@@ -29,8 +29,8 @@
                             <button name="open_customer" class="btn-primary" type="object" string="Pull Customer">
                             </button>
                             <field name="cus_ids">
-                                <tree string="Customer" editable="bottom">
-                                    <field name="customer_id"/>
+                                <tree string="Customer" editable="0">
+                                    <field name="name"/>
                                     <field name="email"/>
                                     <field name="check_person" widget="boolean_toggle"/>
                                 </tree>
@@ -41,9 +41,8 @@
                             <button name="open_discount_check_product" class="btn-primary" type="object" string="Pull Product">
                             </button>
                             <field name="pro_ids">
-                                <tree string="Product" editable="bottom">
-                                    <field name="product_id"/>
-                                    <field name="price"/>
+                                <tree string="Product" editable="0">
+                                    <field name="name"/>
                                     <field name="discount_amount"/>
                                     <field name="quantity"/>
                                 </tree>

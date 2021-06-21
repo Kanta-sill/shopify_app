@@ -14,8 +14,7 @@
                         <field name="pro_ids">
                             <tree string="Product" editable="bottom" create="0" delete="0">
                                 <field name="check_product"/>
-                                <field name="product_id" readonly="1"/>
-                                <field name="price" readonly="1"/>
+                                <field name="name" readonly="1"/>
                             </tree>
                         </field>
                     </page>

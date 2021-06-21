@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="shop_discount_preview_view_tree" model="ir.ui.view">
+        <field name="name">shopify.discount.preview.tree</field>
+        <field name="model">shopify.discount.preview</field>
+        <field name="arch" type="xml">
+            <tree string="Preview">
+                <field name="shop"/>
+                <field name="discount_color"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="shop_discount_preview_view_form" model="ir.ui.view">
+        <field name="name">shopify.discount.preview.form</field>
+        <field name="model">shopify.discount.preview</field>
+        <field name="arch" type="xml">
+            <form string="Preview">
+                <sheet>
+                    <group>
+                        <field name="shop"/>
+                    </group>
+                    <div class="row" style="margin-top: 42px">
+                        <b style="width: 100px; margin-left: 30px; margin-top: 7px">Discount Color:</b><field name="discount_color" widget="color" style="width: 70px; margin-left: 26px"/>
+                        <field name="discount_sample" style="width: 30%; margin-top: 7px; margin-left: 20%" readonly="1"/>
+                    </div>
+                    <div class="row" style="margin-top: 12px">
+                        <b style="width: 100px; margin-left: 30px; margin-top: 7px">Amount Color:</b><field name="amount_color" widget="color" style="width: 70px; margin-left: 26px"/>
+                        <field name="amount_sample" style="width: 30%; margin-top: 7px; margin-left: 20%" readonly="1"/>
+                    </div>
+                    <div class="row" style="margin-top: 12px">
+                        <b style="width: 100px; margin-left: 30px; margin-top: 7px">Voucho Color:</b><field name="voucho_color" widget="color" style="width: 70px; margin-left: 26px"/>
+                        <field name="voucho_sample" style="width: 30%; margin-top: 7px; margin-left: 20%" readonly="1"/>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="shop_discount_preview_action" model="ir.actions.act_window">
+        <field name="name">Preview</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">shopify.discount.preview</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p>
+                Create new item
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="shop_discount_preview" name="Preview" parent="shop_app_root" action="shop_discount_preview_action"/>
+
+</odoo>
