@@ -123,6 +123,7 @@ function loadMastershop($) {
     // http.send(params);
 
     function VariantBought(data, customer_id) {
+        var data_cart = data
         $.ajax({
             type: 'POST',
             url: base_url + '/shopify_data/fetch_variant/' + customer_id + '/' + shop,
@@ -140,7 +141,6 @@ function loadMastershop($) {
                 cart_subtotal_price = document.querySelector('.cart-subtotal_price');
                 cart_subtotal_name.style.visibility = 'hidden';
                 cart_subtotal_price.style.visibility = 'hidden';
-
                 view_cart = '<table style="margin-left: 50%;">\n' +
                     '            <tr>\n' +
                     '                <td>\n' +
@@ -171,12 +171,10 @@ function loadMastershop($) {
                     '            </table>'
 
                 $(view_cart).insertAfter(cart_subtotal_price)
-
                 document.querySelector('.cart-subtotal__title1').innerHTML = cart_subtotal_name.innerHTML;
                 document.querySelector('.cart-subtotal_price1').innerHTML = cart_subtotal_price.innerHTML;
 
                 if (productDetail['discounts'].length > 0) {
-
                     document.getElementById('cart-discount_price').innerHTML = '-' + productDetail['final_discount'].toString() + ' ' + currency
                     document.getElementById('cart-discount_price').style.color = productDetail['amount_color']
                     document.getElementById('cart-total_price').innerHTML = productDetail['purchase'].toString() + ' ' + currency
@@ -192,32 +190,19 @@ function loadMastershop($) {
                     document.getElementsByClassName('cart-discount__total1')[0].style.visibility = 'hidden'
                     document.getElementById('cart-discount__total2').style.display = 'none'
                 }
-
-                $(".cart__submit").click(function () {
-                    $.ajax({
-                        type: 'GET',
-                        url: 'https://' + shop + '/cart.js',
-                        dataType: 'json',
-                        data: JSON.stringify({jsonrpc: '2.0'}),
-                        contentType: 'application/json',
-                        error: function (request, error) {
-                            console.log('error')
-                        },
-                        complete: function (data) {
-                            var data_parse = JSON.parse(data['responseText'])
-                            if (window.customerId == "") {
-                                alert('You must login before checkout')
-                                top.location.href = document.location.href;
-                            } else {
-                                data_parse['discount_program'] = productDetail['discounts']
-                                data_parse['customer_id'] = window.customerId
-                                data_parse['discount_value'] = productDetail['final_discount']
-                                data_parse['total'] = productDetail['purchase']
-                                UpdateCheckout(data_parse)
-                            }
-                        }
-                    })
-                });
+                $(".cart__submit").click(function (e) {
+                    console.log(data_cart)
+                    if (window.customerId == "") {
+                        alert('You must login before checkout')
+                        e.preventDefault();
+                    } else {
+                        data_cart['discount_program'] = productDetail['discounts']
+                        data_cart['customer_id'] = window.customerId
+                        data_cart['discount_value'] = productDetail['final_discount']
+                        data_cart['total'] = productDetail['purchase']
+                        UpdateCheckout(data_cart)
+                    }
+                })
             }
         })
     }
