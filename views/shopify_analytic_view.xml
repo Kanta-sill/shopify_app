@@ -20,10 +20,11 @@
                     <group>
                         <field name="name"/>
                         <field name="shop_id"/>
+                        <field name="report" widget="quick_publish_button"/>
                     </group>
-                    <iframe id="mastershop_report_dashboard_iframe" src="/report/mastershop_report_dashboard"
-                            class="col-12" style="width: 100%; height: 800px; border: none">
-                    </iframe>
+<!--                    <iframe id="mastershop_report_dashboard_iframe" src="/report/mastershop_report_dashboard"-->
+<!--                            class="col-12" style="width: 100%; height: 800px; border: none">-->
+<!--                    </iframe>-->
                 </sheet>
             </form>
         </field>

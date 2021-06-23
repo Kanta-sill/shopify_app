@@ -21,51 +21,73 @@ odoo.define('shopify_app.mastershop_report_analytic_js', function (require) {
             complete: function (data) {
                 var productDetail = JSON.parse(data['responseText'])['result']
                 var ListProductValue = ''
-                for (var i=0; i<productDetail['products'].length; i++) {
+                for (var i = 0; i < productDetail['products'].length; i++) {
                     ListProductValue += '\'' + productDetail['products'][i] + '\','
                 }
                 var ListProductQuantity = productDetail['product_quantity'].toString()
+                var minProduct = (Math.min(...productDetail['product_quantity']) - 1).toString()
+                var maxProduct = (Math.max(...productDetail['product_quantity']) + 1).toString()
 
                 var ListDiscountValue = ''
-                for (var i=0; i<productDetail['discounts'].length; i++) {
+                for (var i = 0; i < productDetail['discounts'].length; i++) {
                     ListDiscountValue += '\'' + productDetail['discounts'][i] + '\','
                 }
                 var ListDiscountQuantity = productDetail['discount_quantity'].toString()
+                var minDiscount = (Math.min(...productDetail['discount_quantity']) - 1).toString()
+                var maxDiscount = (Math.max(...productDetail['discount_quantity']) + 1).toString()
 
                 var month = productDetail['month']
-                var analyticGraphBar = '<script>\n' +
-                    '\tif((typeof myChartBar) == \'object\') {\n' +
-                    '\t}else {\n' +
-                    '  \t  var ctxbar = document.getElementById(\'discount_graph_bar_id\').getContext(\'2d\');\n' +
-                    '          var myChartBar = new Chart(ctxbar, {\n' +
-                    '            type: \'bar\',\n' +
-                    '            data: {\n' +
-                    '\t\tlabels: [' + ListDiscountValue + '],\n' +
-                    '                datasets: [{\n' +
-                    '                    label: \'Top Discount ' + month + '\',\n' +
-                    '                    data: [' + ListDiscountQuantity + '],\n' +
-                    '                    fill: false,\n' +
-                    '                    borderColor: \'green\',\n' +
-                    '                    backgroundColor: \'#A1F7BB\',\n' +
-                    '                },]\n' +
-                    '            },\n' +
-                    '        });\n' +
-                    '  \t  var ctxProduct = document.getElementById(\'product_graph_bar_id\').getContext(\'2d\');\n' +
-                    '          var productChartBar = new Chart(ctxProduct, {\n' +
-                    '            type: \'bar\',\n' +
-                    '            data: {\n' +
-                    '\t\tlabels: [' + ListProductValue + '],\n' +
-                    '                datasets: [{\n' +
-                    '                    label: \'Top Product ' + month + '\',\n' +
-                    '                    data: [' + ListProductQuantity + '],\n' +
-                    '                    fill: false,\n' +
-                    '                    borderColor: \'green\',\n' +
-                    '                    backgroundColor: \'#eda634\',\n' +
-                    '                },]\n' +
-                    '            },\n' +
-                    '        });\n' +
-                    '\t}\n' +
-                    '</script>'
+
+                var analyticGraphBar = '<script> \n' +
+                    '                        var ctxbar = document.getElementById(\'discount_graph_bar_id\').getContext(\'2d\'); \n' +
+                    '                              var myChartBar = new Chart(ctxbar, { \n' +
+                    '                                type: \'bar\', \n' +
+                    '                                data: { \n' +
+                    '                                labels: [' + ListDiscountValue + '],\n' +
+                    '                                    datasets: [{ \n' +
+                    '                                        label: \'Top Discount ' + month + '\',\n' +
+                    '                                        data: [' + ListDiscountQuantity + '],\n' +
+                    '                                        fill: false, \n' +
+                    '                                        borderColor: \'green\', \n' +
+                    '                                        backgroundColor: \'#A1F7BB\', \n' +
+                    '                                    },] \n' +
+                    '                                }, \n' +
+                    '\t\t\t\toptions: {\n' +
+                    '\t\t\t\tscales: {\n' +
+                    '\t\t\t\t    yAxes: [{\n' +
+                    '\t\t\t\t\tticks: {\n' +
+                    '\t\t\t\t\t    min: ' + minDiscount + ',\n' +
+                    '\t\t\t\t\t    max: ' + maxDiscount + ',\n' +
+                    '\t\t\t\t\t},\n' +
+                    '\t\t\t\t    }],\n' +
+                    '\t\t\t\t},\n' +
+                    '\t\t\t    }\n' +
+                    '                            }); \n' +
+                    '                        var ctxProduct = document.getElementById(\'product_graph_bar_id\').getContext(\'2d\'); \n' +
+                    '                              var productChartBar = new Chart(ctxProduct, { \n' +
+                    '                                type: \'bar\', \n' +
+                    '                                data: { \n' +
+                    '                                labels: [' + ListProductValue + '],\n' +
+                    '                                    datasets: [{ \n' +
+                    '                                        label: \'Top Product ' + month + '\',\n' +
+                    '                                        data: [' + ListProductQuantity + '],\n' +
+                    '                                        fill: false, \n' +
+                    '                                        borderColor: \'green\', \n' +
+                    '                                        backgroundColor: \'#eda634\', \n' +
+                    '                                    },] \n' +
+                    '                                }, \n' +
+                    '\t\t\t\toptions: {\n' +
+                    '\t\t\t\tscales: {\n' +
+                    '\t\t\t\t    yAxes: [{\n' +
+                    '\t\t\t\t\tticks: {\n' +
+                    '\t\t\t\t\t    min: ' + minProduct + ',\n' +
+                    '\t\t\t\t\t    max: ' + maxProduct + ',\n' +
+                    '\t\t\t\t\t},\n' +
+                    '\t\t\t\t    }],\n' +
+                    '\t\t\t\t},\n' +
+                    '\t\t\t    }\n' +
+                    '                            }); \n' +
+                    '                    </script>'
                 $('#mastershop_report_dashboard_iframe').contents().find('#mastershop_analytic_graph_bar').after(analyticGraphBar)
             }
         })

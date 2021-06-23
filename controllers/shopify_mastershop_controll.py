@@ -132,18 +132,21 @@ class MasterShopShopify(http.Controller):
         redirectUrl = base_url + '/web?#menu_id=' + str(BundleMenu)
         return werkzeug.utils.redirect(redirectUrl, 301)
 
-    @http.route('/shopify_data/fetch_variant/<string:customer_id>/<string:shop>',
-                auth='public', type='json', cors='*', csrf=False)
-    def odoo_fetch_variant(self, customer_id, shop, *kwargs):
-        def check_product_ids(pro_list_a, pro_list_b):
-            flag = True
+    def check_product_ids(self, pro_list_a, pro_list_b):
+        flag = True
+        if len(pro_list_a) != len(pro_list_b):
+            flag = False
+        if flag == True:
             for pro in pro_list_a:
                 if pro not in pro_list_b:
                     flag = False
-            return flag
+                    break
+        return flag
 
+    @http.route('/shopify_data/fetch_variant/<string:customer_id>/<string:shop>', auth='public', type='json', cors='*',
+                csrf=False)
+    def odoo_fetch_variant(self, customer_id, shop, *kwargs):
         params = request.params
-
         shop_id = request.env['shopify.shop'].sudo().search([('base_url', '=', shop)])
         discount_product = request.env['shopify.discount.program'].sudo().search(
             [('shop_id', '=', shop_id.id)])
@@ -151,32 +154,37 @@ class MasterShopShopify(http.Controller):
 
         dis_program_product = []
         for discount_program in discount_product:
+            # Check if customer is exist
             if discount_program.pro_ids and discount_program.cus_ids and customer_id != 'No Customer':
                 customer_ids = []
                 for customer in discount_program.cus_ids:
                     customer_ids.append(customer.cus_id)
                 discount_amount = 0
-                discount_product = []
+                discount_name = []
                 product_ids = []
+
+                # Get valid discount for information
                 for discount in discount_program.pro_ids:
                     for var in params['items']:
                         if discount.pro_id == str(var['product_id']) and \
                                 var['quantity'] >= discount.quantity and discount.discount_amount > 0 \
                                 and customer_id in customer_ids:
                             discount_amount += discount.discount_amount * var['quantity']
-                            discount_product.append(var['title'])
+                            discount_name.append(var['title'])
                             product_ids.append(var['product_id'])
                             break
+
+                # Add valid discount information to list dis_program_product
                 if len(discount_program.pro_ids.ids) == len(product_ids):
                     dis_flag = True
                     for discount in dis_program_product:
-                        if check_product_ids(discount['product_ids'], product_ids):
+                        if self.check_product_ids(discount['product_ids'], product_ids):
                             if discount_amount > discount['discount_amount']:
                                 dis_program_product.remove(discount)
                                 dis_program_product.append({
                                     'id': discount_program.id,
                                     'discount_program': discount_program.name,
-                                    'products': discount_product,
+                                    'products': discount_name,
                                     'discount_amount': discount_amount,
                                     'product_ids': product_ids
                                 })
@@ -184,8 +192,9 @@ class MasterShopShopify(http.Controller):
                                 break
                     if dis_flag:
                         dis_program_product.append({
+                            'id': discount_program.id,
                             'discount_program': discount_program.name,
-                            'products': discount_product,
+                            'products': discount_name,
                             'discount_amount': discount_amount,
                             'product_ids': product_ids
                         })
@@ -243,7 +252,7 @@ class MasterShopShopify(http.Controller):
                 'name': 'mastershop_checkout',
                 'value': meta.id
             }]
-            checkout = {
+            vals = {
                 'line_items': line_items,
                 'applied_discount': applied_discount,
                 'customer': {
@@ -251,6 +260,6 @@ class MasterShopShopify(http.Controller):
                 },
                 'note_attributes': note_attributes
             }
-            new_checkout = shopify.DraftOrder.create(checkout)
+            new_checkout = shopify.DraftOrder.create(vals)
 
         return new_checkout.invoice_url

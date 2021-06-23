@@ -24,6 +24,7 @@
         'wizards/discount_choose_product_view.xml',
     ],
     'qweb': [
+        'static/src/xml/qweb_template.xml',
     ],
     'installable': True,
     'application': True,

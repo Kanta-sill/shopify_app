@@ -1,20 +1,63 @@
 const base_url = 'https://odoo.website'
 
-function initJQueryWsap(e) {
-    var t;
-    "undefined" == typeof jQuery ? ((t = document.createElement("SCRIPT")).src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", t.type = "text/javascript", t.onload = e, document.head.appendChild(t)) : e()
+// function initJQueryWsap(e) {
+//     var t;
+//     "undefined" == typeof jQuery ? ((t = document.createElement("SCRIPT")).src = "https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js", t.type = "text/javascript", t.onload = e, document.head.appendChild(t)) : e()
+// }
+//
+// initJQueryWsap(function () {
+//     if (window.AllFetchURLWsap == undefined) {
+//         window.AllFetchURLWsap = base_url;
+//         notifywhatsappthankyoupage();
+//     } else {
+//         console.log("Error Window.AllFetchURLWsap");
+//     }
+// });
+//
+// notifywhatsappthankyoupage = function () {
+
+if (typeof jQuery === 'undefined' || parseFloat(jQuery.fn.jquery) < 1.7) {
+    loadScript('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js', function () {
+        loadScript('//cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.js', function () {
+            var jQuery191 = jQuery.noConflict(true);
+            var link_css = '<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css">\n' +
+                '<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">\n' +
+                '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">\n' +
+                '<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap" rel="stylesheet">\n';
+            jQuery191('head').append(link_css);
+            loadMastershop(jQuery191);
+        })
+    });
+} else {
+    loadMastershop(jQuery);
+    var linkSlickCss = '<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css">\n' +
+        '<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">\n' +
+        '<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">\n';
+    jQuery('head').append(linkSlickCss);
 }
 
-initJQueryWsap(function () {
-    if (window.AllFetchURLWsap == undefined) {
-        window.AllFetchURLWsap = base_url;
-        notifywhatsappthankyoupage();
+function loadScript(url, callback) {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = url || '';
+    if (script.readyState) {
+        //IE
+        script.onreadystatechange = function () {
+            if (script.readyState == "loaded" || script.readyState == "complete") {
+                script.onreadystatechange = null;
+                callback();
+            }
+        };
     } else {
-        console.log("Error Window.AllFetchURLWsap");
+        //Others
+        script.onload = function () {
+            callback();
+        };
     }
-});
+    document.getElementsByTagName("head")[0].appendChild(script);
+}
 
-notifywhatsappthankyoupage = function () {
+function loadMastershop($) {
     item = document.querySelectorAll('.list-view-item__title')
     for (var i = 0; i < item.length; i++) {
         item[i].style.height = "40px";
@@ -63,6 +106,21 @@ notifywhatsappthankyoupage = function () {
             }
         })
     }
+
+    // var customer = '123456'
+    // var http = new XMLHttpRequest();
+    // var url = 'https://odoo.website/shopify_data/fetch_variant/' + customer + '/' + shop
+    // var params = 'orem=ipsum&name=binny';
+    // http.open('POST', url, true);
+    //
+    // http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+    //
+    // http.onreadystatechange = function () {
+    //     if (http.readyState == 4 && http.status == 200) {
+    //         alert(http.responseText);
+    //     }
+    // }
+    // http.send(params);
 
     function VariantBought(data, customer_id) {
         $.ajax({
@@ -164,4 +222,3 @@ notifywhatsappthankyoupage = function () {
         })
     }
 }
-
