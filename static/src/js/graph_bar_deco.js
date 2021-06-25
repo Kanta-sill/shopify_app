@@ -1,9 +1,9 @@
-function get_test_graph_bar(productValue, productQuantity, discountValue, discountQuantity, month) {
-    if (month[0] < 10) {
-        month = '0' + month[0].toString() + '/' + month[1].toString()
-    }else {
-        month = month[0].toString() + '/' + month[1].toString()
-    }
+function get_test_graph_bar(result) {
+    var productValue = result[0]['products']
+    var productQuantity = result[0]['product_quantity']
+    var discountValue = result[0]['discounts']
+    var discountQuantity = result[0]['discount_quantity']
+    var month = result[0]['month']
     var minProduct = (Math.min(...productQuantity) - 1)
     var maxProduct = (Math.max(...productQuantity) + 1)
     var minDiscount = (Math.min(...discountQuantity) - 1)
