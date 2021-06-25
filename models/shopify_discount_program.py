@@ -41,15 +41,22 @@ class ShopifyDiscountProgram(models.Model):
             'discount_id': self.id,
         }
         new_discount = self.env['shopify.discount.choose.product'].sudo().create(discount_vals)
+        pro_list = []
+        for pro in self.pro_ids:
+            pro_list.append(pro.pro_id)
         if self.shop_id:
             self.get_authenticate_shopify()
             products = shopify.Product.find(limit=50)
             create_pro_ids = []
             for product in products:
+                check = False
+                if str(product.id) in pro_list:
+                    check = True
                 create_pro_ids.append((0, 0, {
                     'discount_id': new_discount.id,
                     'pro_id': product.id,
                     'name': product.title,
+                    'check_product': check
                 }))
             if create_pro_ids:
                 pro_vals = {

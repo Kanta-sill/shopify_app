@@ -18,6 +18,12 @@ class ShopifyDiscountChooseProduct(models.TransientModel):
             pro_id_list.append(pro.pro_id)
         pro_list = self.env['shopify.discount.choose.product.get.product'].sudo().search(
             [('discount_id', '=', self.id), ('check_product', '=', True)])
+        pro_id_lists = []
+        for pro in pro_list:
+            pro_id_lists.append(pro.pro_id)
+        for discount in discount_product:
+            if discount.pro_id not in pro_id_lists:
+                discount.unlink()
 
         for pro in pro_list:
             if pro.pro_id not in pro_id_list:
