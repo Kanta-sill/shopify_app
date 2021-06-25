@@ -15,6 +15,7 @@
     'data': [
         'security/shop_security.xml',
         'security/ir.model.access.csv',
+        'data/sequence.xml',
         'views/assets.xml',
         'views/shopify_app.xml',
         'views/shopify_shop.xml',

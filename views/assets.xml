@@ -2,7 +2,6 @@
     <template id="assets_end" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <!-- add widget internal_img -->
-            <script src="/shopify_app/static/src/js/mastershop_report.js" type="text/javascript"/>
             <script src="/shopify_app/static/src/js/master_report.js" type="text/javascript"/>
         </xpath>
     </template>

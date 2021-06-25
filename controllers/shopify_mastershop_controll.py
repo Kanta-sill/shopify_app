@@ -202,6 +202,20 @@ class MasterShopShopify(http.Controller):
         for discount in dis_program_product:
             final_discount += discount['discount_amount']
 
+        if dis_program_product:
+            analytic_discount_name = ''
+            analytic_product_name = ''
+            for discount in dis_program_product:
+                analytic_discount_name += str(discount['discount_program']) + ','
+                for pro in discount['products']:
+                    analytic_product_name += str(pro) + ','
+            vals = {
+                'shop_id': shop_id.id,
+                'discount_name': str(analytic_discount_name),
+                'product_info': str(analytic_product_name)
+            }
+            request.env['shopify.analytic.shop'].sudo().create(vals)
+
         return {
             'discounts': dis_program_product,
             'final_discount': final_discount,
@@ -233,9 +247,13 @@ class MasterShopShopify(http.Controller):
                 'quantity': product['quantity']
             })
         discount_program = params['discount_program']
+        meta_key = request.env['ir.sequence'].sudo().next_by_code('metafield.sequence')
+
+        #Create metafield
+        meta = False
         meta = shopify.Metafield.create({
             'namespace': 'draft_orders',
-            'key': 'mastershop',
+            'key': meta_key,
             'value': json.dumps(discount_program),
             'value_type': 'json_string',
         })
@@ -246,6 +264,7 @@ class MasterShopShopify(http.Controller):
             'value': params['discount_value']
         }
 
+        #Create new checkout
         new_checkout = False
         if meta:
             note_attributes = [{
@@ -262,4 +281,5 @@ class MasterShopShopify(http.Controller):
             }
             new_checkout = shopify.DraftOrder.create(vals)
 
-        return new_checkout.invoice_url
+            return new_checkout.invoice_url
+        return new_checkout

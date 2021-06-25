@@ -5,3 +5,4 @@ from . import shopify_discount_program
 from . import shopify_contact_inherit
 from . import shopify_discount_preview
 from . import shopify_analytic
+from. import shopify_analytic_shop

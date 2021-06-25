@@ -7,7 +7,7 @@
             <script src="/shopify_app/static/src/js/graph_bar_deco.js" type="text/javascript"/>
             <link rel="stylesheet" href="/shopify_app/static/src/css/mastershop_report.css"/>
         </head>
-        <body onload="get_test_graph_bar()">
+        <body>
             <div id="mastershop_graph_bar">
                 <canvas id="discount_graph_bar_id" style="width: 95%; height: 370px; background-color: #fce8ed">
                     Can not load graph
