@@ -1,6 +1,9 @@
 odoo.define('shopify_app.quick_publish', function (require) {
     'use strict';
 
+    var FormController = require('web.FormController');
+    var FormView = require('web.FormView');
+    var viewRegistry = require('web.view_registry');
     var AbstractField = require('web.AbstractField');
     var core = require('web.core');
     var field_registry = require('web.field_registry');
@@ -32,5 +35,19 @@ odoo.define('shopify_app.quick_publish', function (require) {
             // return this._super.apply(this, arguments);
         },
     });
+    var OurFormController = FormController.extend({
+        customer_events: _.extend({}, FormController.prototype.customer_events, {
+            jsLibs: [
+                '/web/static/lib/Chart/Chart.js',
+            ],
+        }),
+    })
+    var OurFormView = FormView.extend({
+        config: _.extend({}, FormView.prototype.config, {
+            Controller: OurFormController,
+        })
+    })
+    viewRegistry.add('mastershop_report_analytic', OurFormView)
+
     field_registry.add('graph_bar_analytic', MastershopAnalyticDataGraphBar)
 });
