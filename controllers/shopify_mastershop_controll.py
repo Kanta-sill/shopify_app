@@ -1,4 +1,5 @@
 import binascii
+import datetime
 import json
 import os
 from random import randint
@@ -202,6 +203,8 @@ class MasterShopShopify(http.Controller):
         for discount in dis_program_product:
             final_discount += discount['discount_amount']
 
+        current = datetime.datetime.now()
+        month_current = current.strftime("%m/%Y")
         if dis_program_product:
             analytic_discount_name = ''
             analytic_product_name = ''
@@ -212,7 +215,8 @@ class MasterShopShopify(http.Controller):
             vals = {
                 'shop_id': shop_id.id,
                 'discount_name': str(analytic_discount_name),
-                'product_info': str(analytic_product_name)
+                'product_info': str(analytic_product_name),
+                'create_month': month_current
             }
             request.env['shopify.analytic.shop'].sudo().create(vals)
 
